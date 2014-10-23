@@ -1,0 +1,32 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 15
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        applicationId "org.spearal.examples.android"
+        minSdkVersion 15
+        targetSdkVersion 15
+    }
+
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:18.0.0'
+    compile 'com.android.support:appcompat-v7:18.0.0'
+    compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
+    compile 'org.spearal:spearal-java:0.2.0-SNAPSHOT'
+    compile 'org.spearal:spearal-spring:0.2.0-SNAPSHOT'
+}
