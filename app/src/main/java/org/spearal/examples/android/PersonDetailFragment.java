@@ -1,10 +1,14 @@
 package org.spearal.examples.android;
 
+import org.spearal.Spearal;
+import org.spearal.configuration.Introspector;
 import org.spearal.examples.android.conf.AbstractRestAsyncTask;
+import org.spearal.examples.android.conf.LoadImageTask;
 import org.spearal.examples.android.conf.SpearalFactoryHolder;
 import org.spearal.examples.android.data.Person;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -15,7 +19,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.lang.reflect.Method;
 
 /**
  * A fragment representing a single Person detail screen. This fragment is
@@ -36,23 +43,29 @@ public class PersonDetailFragment extends Fragment {
 	public PersonDetailFragment() {
 	}
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         if (getArguments().containsKey(ARG_ITEM_ID))
-		    new LoadPersonTask().execute(getArguments().getLong(ARG_ITEM_ID));
-        else
+            new LoadPersonTask().execute(getArguments().getLong(ARG_ITEM_ID));
+        else {
+            // setPerson(new Person());
             setPerson(SpearalFactoryHolder.create(Person.class));
-	}
-	
-	private Person person;
+        }
+    }
+
+    private Person person;
 
     private void setPerson(Person person) {
         this.person = person;
+        if (getView() == null)
+            return;
+
         ((TextView)getView().findViewById(R.id.form_name)).setText(person.getName());
         ((TextView)getView().findViewById(R.id.form_description)).setText(person.getDescription());
         ((TextView)getView().findViewById(R.id.form_imageurl)).setText(person.getImageUrl());
+        new LoadImageTask(((ImageView)getView().findViewById(R.id.form_image))).execute(person.getImageUrl());
     }
 
     private void showList() {
@@ -70,9 +83,9 @@ public class PersonDetailFragment extends Fragment {
 
             @Override
             public void onClick(View button) {
-                person.setName(((TextView) getView().findViewById(R.id.form_name)).getText().toString());
-                person.setDescription(((TextView) getView().findViewById(R.id.form_description)).getText().toString());
-                person.setImageUrl(((TextView) getView().findViewById(R.id.form_imageurl)).getText().toString());
+                applyTextValue(person, "name", getView(), R.id.form_name);
+                applyTextValue(person, "description", getView(), R.id.form_description);
+                applyTextValue(person, "imageUrl", getView(), R.id.form_imageurl);
                 new SavePersonTask().execute(person);
             }
         });
@@ -87,6 +100,23 @@ public class PersonDetailFragment extends Fragment {
 		
 		return rootView;
 	}
+
+    private static void applyTextValue(Object object, String propertyName, View rootView, int textViewId) {
+        try {
+            Method getter = object.getClass().getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1));
+            Object currentValue = getter.invoke(object);
+            String value = ((TextView)rootView.findViewById(textViewId)).getText().toString();
+            if (value.equals(currentValue))
+                Spearal.undefine(object, propertyName);
+            else {
+                Method setter = object.getClass().getMethod("set" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1), String.class);
+                setter.invoke(object, value);
+            }
+        }
+        catch (Exception e) {
+            // Should probably do something
+        }
+    }
 
 	private class LoadPersonTask extends AbstractRestAsyncTask<Long, Void, Person> {
 		

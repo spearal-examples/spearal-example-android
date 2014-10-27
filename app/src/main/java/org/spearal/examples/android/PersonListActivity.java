@@ -1,14 +1,16 @@
 package org.spearal.examples.android;
 
-import org.spearal.examples.android.conf.SpearalFactoryHolder;
+import org.spearal.examples.android.conf.AbstractRestAsyncTask;
 import org.spearal.examples.android.data.Person;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.ListFragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 
 /**
  * An activity representing a list of People. This activity has different
@@ -32,17 +34,19 @@ public class PersonListActivity extends FragmentActivity implements PersonListFr
 	 * device.
 	 */
 	private boolean mTwoPane;
-	
+
+    private static final String URL1 = "https://examples-spearal.rhcloud.com/spring-angular/resources";
+    private static final String URL2 = "https://examples-spearal.rhcloud.com/spring-angular-v2/resources";
+
+    public static String baseUrl = URL1;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 				
 		setContentView(R.layout.activity_person_list);
-		
-		// Force initialization of Spearal context
-		SpearalFactoryHolder.getInstance();
-		
+
 		if (findViewById(R.id.person_detail_container) != null) {
 			// The detail container view will be present only in the
 			// large-screen layouts (res/values-large and
@@ -74,9 +78,22 @@ public class PersonListActivity extends FragmentActivity implements PersonListFr
             case R.id.menu_new:
                 onItemSelected(null);
                 return true;
+            case R.id.menu_url1:
+                changeUrl(URL1);
+                return true;
+            case R.id.menu_url2:
+                changeUrl(URL2);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void changeUrl(String url) {
+        baseUrl = url;
+        ((ArrayAdapter)((ListFragment)getSupportFragmentManager().findFragmentById(R.id.person_list)).getListAdapter()).notifyDataSetChanged();
+        if (mTwoPane)
+            onItemSelected(null);
     }
 
 	/**

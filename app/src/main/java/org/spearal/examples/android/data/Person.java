@@ -17,5 +17,5 @@ public interface Person extends Serializable {
     public void setDescription(String description);
 
     public String getImageUrl();
-    public void setImageUrl(String link);
+    public void setImageUrl(String imageUrl);
 }

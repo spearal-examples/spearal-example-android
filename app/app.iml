@@ -85,6 +85,8 @@
     <orderEntry type="library" exported="" name="support-v4-18.0.0" level="project" />
     <orderEntry type="library" exported="" name="spring-android-core-1.0.1.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-18.0.0" level="project" />
+    <orderEntry type="library" exported="" name="spearal-java-0.2.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="spearal-spring-0.2.0-SNAPSHOT" level="project" />
   </component>
 </module>
 

@@ -2,11 +2,7 @@ package org.spearal.examples.android.conf;
 
 import org.spearal.DefaultSpearalFactory;
 import org.spearal.SpearalFactory;
-import org.spearal.configuration.PartialObjectFactory;
-import org.spearal.configuration.PropertyFactory;
 import org.spearal.impl.alias.PackageTranslatorAliasStrategy;
-
-import java.lang.reflect.Proxy;
 
 
 public class SpearalFactoryHolder {

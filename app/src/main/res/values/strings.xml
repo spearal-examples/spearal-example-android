@@ -4,6 +4,7 @@
     <string name="app_name">Spearal Android</string>
     <string name="title_person_detail">Person Detail</string>
     <string name="menu_new">New</string>
+    <string name="menu_url">Url</string>
     <string name="form_name">Name</string>
     <string name="form_description">Description</string>
     <string name="form_imageurl">Image url</string>
