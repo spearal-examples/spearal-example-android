@@ -118,7 +118,8 @@ public class PersonListActivity extends FragmentActivity implements PersonListFr
 			// In single-pane mode, simply start the detail activity
 			// for the selected item ID.
 			Intent detailIntent = new Intent(this, PersonDetailActivity.class);
-			detailIntent.putExtra(PersonDetailFragment.ARG_ITEM_ID, person.getId());
+            if (person != null)
+			    detailIntent.putExtra(PersonDetailFragment.ARG_ITEM_ID, person.getId());
 			startActivity(detailIntent);
 		}
 	}
